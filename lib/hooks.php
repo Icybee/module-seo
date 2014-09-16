@@ -22,7 +22,7 @@ use Patron\Engine as Patron;
 
 use Icybee\EditBlock\AlterChildrenEvent;
 use Icybee\Modules\Contents\Content;
-use Icybee\Modules\Pages\PageController;
+use Icybee\Modules\Pages\PageRenderer;
 
 // http://www.google.com/webmasters/docs/search-engine-optimization-starter-guide.pdf
 
@@ -36,10 +36,10 @@ class Hooks
 	 * - The user is the admin.
 	 * - The page or the displayed record is offline.
 	 *
-	 * @param PageController\RenderEvent $event
-	 * @param PageController $target
+	 * @param PageRenderer\RenderEvent $event
+	 * @param PageRenderer $target
 	 */
-	static public function on_page_controller_render(PageController\RenderEvent $event, PageController $target)
+	static public function on_page_renderer_render(PageRenderer\RenderEvent $event, PageRenderer $target)
 	{
 		global $core;
 
