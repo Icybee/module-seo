@@ -41,11 +41,9 @@ class Hooks
 	 */
 	static public function on_page_renderer_render(PageRenderer\RenderEvent $event, PageRenderer $target)
 	{
-		global $core;
-
 		$page = $event->page;
 
-		if (strpos($_SERVER['SERVER_NAME'], 'localhost') !== false || $core->user_id == 1 || !$page->is_online || ($page->node && !$page->node->is_online))
+		if (strpos($_SERVER['SERVER_NAME'], 'localhost') !== false || \ICanBoogie\app()->user_id == 1 || !$page->is_online || ($page->node && !$page->node->is_online))
 		{
 			return;
 		}
@@ -92,9 +90,7 @@ EOT;
 	 */
 	static public function before_document_render_title(\Icybee\Document\BeforeRenderTitleEvent $event)
 	{
-		global $core;
-
-		$page = $core->request->context->page;
+		$page = \ICanBoogie\app()->request->context->page;
 		$title = $page->document_title;
 		$site_title = $page->site->title;
 
@@ -108,9 +104,7 @@ EOT;
 	 */
 	static public function before_document_render_metas(\Icybee\Document\BeforeRenderMetasEvent $event)
 	{
-		global $core;
-
-		$page = $core->request->context->page;
+		$page = \ICanBoogie\app()->request->context->page;
 		$node = isset($page->node) ? $page->node : null;
 		$description = $page->description;
 
@@ -146,9 +140,7 @@ EOT;
 	 */
 	static public function on_document_render_metas(\Icybee\Document\RenderMetasEvent $event)
 	{
-		global $core;
-
-		$page = $core->request->context->page;
+		$page = \ICanBoogie\app()->request->context->page;
 		$node = isset($page->node) ? $page->node : null;
 
 		#
@@ -211,8 +203,6 @@ EOT;
 	 */
 	static public function on_page_editblock_alter_children(AlterChildrenEvent $event, \Icybee\Modules\Pages\EditBlock $block)
 	{
-		global $core;
-
 		$event->attributes[Element::GROUPS]['seo'] = array
 		(
 			'title' => 'SEO',
@@ -256,12 +246,10 @@ EOT;
 	 */
 	static public function on_operation_export(Operation\ProcessEvent $event, Operation $operation)
 	{
-		global $core;
-
 		$records = &$event->rc;
 		$keys = array_keys($records);
 
-		$metas = $core->models['registry/node']->where(array('targetid' => $keys, 'name' => array('document_title', 'description')))->all(\PDO::FETCH_NUM);
+		$metas = \ICanBoogie\app()->models['registry/node']->where(array('targetid' => $keys, 'name' => array('document_title', 'description')))->all(\PDO::FETCH_NUM);
 
 		foreach ($metas as $meta)
 		{
