@@ -18,6 +18,7 @@ use Brickrouge\Element;
 use Brickrouge\Group;
 use Brickrouge\Text;
 
+use Icybee\Modules\Nodes\Node;
 use Patron\Engine as Patron;
 
 use Icybee\EditBlock\AlterChildrenEvent;
@@ -140,6 +141,8 @@ EOT;
 	 */
 	static public function on_document_render_metas(\Icybee\Document\RenderMetasEvent $event)
 	{
+		/* @var $node Node */
+
 		$page = \ICanBoogie\app()->request->context->page;
 		$node = isset($page->node) ? $page->node : null;
 
@@ -164,35 +167,29 @@ EOT;
 	 */
 	static public function on_site_editblock_alter_children(AlterChildrenEvent $event, \Icybee\Modules\Sites\EditBlock $block)
 	{
-		$event->attributes[Element::GROUPS]['seo'] = array
-		(
+		$event->attributes[Element::GROUPS]['seo'] = [
+
 			'title' => 'SEO',
 			'weight' => 40
-		);
 
-		$event->children = array_merge
-		(
-			$event->children, array
-			(
-				'metas[google_analytics_ua]' => new Text
-				(
-					array
-					(
-						Group::LABEL => 'Google Analytics UA',
-						Element::GROUP => 'seo'
-					)
-				),
+		];
 
-				'metas[google_site_verification]' => new Text
-				(
-					array
-					(
-						Group::LABEL => 'Google Site Verification',
-						Element::GROUP => 'seo'
-					)
-				)
-			)
-		);
+		$event->children = array_merge($event->children, [
+
+			'metas[google_analytics_ua]' => new Text([
+
+					Group::LABEL => 'Google Analytics UA',
+					Element::GROUP => 'seo'
+
+			]),
+
+			'metas[google_site_verification]' => new Text([
+
+				Group::LABEL => 'Google Site Verification',
+				Element::GROUP => 'seo'
+
+			])
+		]);
 	}
 
 	/**
@@ -203,11 +200,12 @@ EOT;
 	 */
 	static public function on_page_editblock_alter_children(AlterChildrenEvent $event, \Icybee\Modules\Pages\EditBlock $block)
 	{
-		$event->attributes[Element::GROUPS]['seo'] = array
-		(
+		$event->attributes[Element::GROUPS]['seo'] = [
+
 			'title' => 'SEO',
 			'weight' => 40
-		);
+
+		];
 
 		#
 		# http://www.google.com/support/webmasters/bin/answer.py?answer=35264&hl=fr
@@ -215,27 +213,23 @@ EOT;
 		# http://www.google.com/support/webmasters/bin/answer.py?answer=79812
 		#
 
-		$event->children['metas[document_title]'] = new Text
-		(
-			array
-			(
-				Group::LABEL => 'document_title',
-				Element::GROUP => 'seo',
-				Element::DESCRIPTION => 'document_title'
-			)
-		);
+		$event->children['metas[document_title]'] = new Text([
 
-		$event->children['metas[description]'] = new Element
-		(
-			'textarea', array
-			(
-				Group::LABEL => 'description',
-				Element::GROUP => 'seo',
-				Element::DESCRIPTION => 'description',
+			Group::LABEL => 'document_title',
+			Element::GROUP => 'seo',
+			Element::DESCRIPTION => 'document_title'
 
-				'rows' => 3
-			)
-		);
+		]);
+
+		$event->children['metas[description]'] = new Element('textarea', [
+
+			Group::LABEL => 'description',
+			Element::GROUP => 'seo',
+			Element::DESCRIPTION => 'description',
+
+			'rows' => 3
+
+		]);
 	}
 
 	/**
@@ -249,7 +243,10 @@ EOT;
 		$records = &$event->rc;
 		$keys = array_keys($records);
 
-		$metas = \ICanBoogie\app()->models['registry/node']->where(array('targetid' => $keys, 'name' => array('document_title', 'description')))->all(\PDO::FETCH_NUM);
+		$metas = self::app()
+			->models['registry/node']
+			->where([ 'targetid' => $keys, 'name' => [ 'document_title', 'description' ] ])
+			->all(\PDO::FETCH_NUM);
 
 		foreach ($metas as $meta)
 		{
@@ -257,5 +254,17 @@ EOT;
 
 			$records[$pageid]->seo[$property] = $value;
 		}
+	}
+
+	/*
+	 * Support
+	 */
+
+	/**
+	 * @return \ICanBoogie\Core|\Icybee\Binding\CoreBindings
+	 */
+	static private function app()
+	{
+		return \ICanBoogie\app();
 	}
 }
