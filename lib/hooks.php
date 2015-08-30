@@ -21,7 +21,7 @@ use Brickrouge\Text;
 use Icybee\Modules\Nodes\Node;
 use Patron\Engine as Patron;
 
-use Icybee\EditBlock\AlterChildrenEvent;
+use Icybee\Block\EditBlock\AlterChildrenEvent;
 use Icybee\Modules\Contents\Content;
 use Icybee\Modules\Pages\PageRenderer;
 
@@ -163,9 +163,9 @@ EOT;
 	 * and the Google Site Verification key.
 	 *
 	 * @param AlterChildrenEvent $event
-	 * @param \Icybee\Modules\Sites\EditBlock $block
+	 * @param \Icybee\Modules\Sites\Block\EditBlock $block
 	 */
-	static public function on_site_editblock_alter_children(AlterChildrenEvent $event, \Icybee\Modules\Sites\EditBlock $block)
+	static public function on_site_editblock_alter_children(AlterChildrenEvent $event, \Icybee\Modules\Sites\Block\EditBlock $block)
 	{
 		$event->attributes[Element::GROUPS]['seo'] = [
 
@@ -196,9 +196,9 @@ EOT;
 	 * Adds controls to edit the SEO title and description of the page.
 	 *
 	 * @param AlterChildrenEvent $event
-	 * @param \Icybee\Modules\Pages\EditBlock $block
+	 * @param \Icybee\Modules\Pages\Block\EditBlock $block
 	 */
-	static public function on_page_editblock_alter_children(AlterChildrenEvent $event, \Icybee\Modules\Pages\EditBlock $block)
+	static public function on_page_editblock_alter_children(AlterChildrenEvent $event, \Icybee\Modules\Pages\Block\EditBlock $block)
 	{
 		$event->attributes[Element::GROUPS]['seo'] = [
 
