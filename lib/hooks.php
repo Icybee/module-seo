@@ -250,9 +250,9 @@ EOT;
 
 		foreach ($metas as $meta)
 		{
-			list($pageid, $property, $value) = $meta;
+			list($page_id, $property, $value) = $meta;
 
-			$records[$pageid]->seo[$property] = $value;
+			$records[$page_id]->seo[$property] = $value;
 		}
 	}
 
