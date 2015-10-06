@@ -87,9 +87,9 @@ EOT;
 	/**
 	 * Replaces the title of the document with the SEO title before the title is rendered.
 	 *
-	 * @param \Icybee\Document\BeforeRenderTitleEvent $event
+	 * @param \Icybee\Element\Document\BeforeRenderTitleEvent $event
 	 */
-	static public function before_document_render_title(\Icybee\Document\BeforeRenderTitleEvent $event)
+	static public function before_document_render_title(\Icybee\Element\Document\BeforeRenderTitleEvent $event)
 	{
 		$page = \ICanBoogie\app()->request->context->page;
 		$title = $page->document_title;
@@ -101,9 +101,9 @@ EOT;
 	/**
 	 * Adds the `Description` and `google-site-verification` metas.
 	 *
-	 * @param \Icybee\Document\BeforeRenderMetasEvent $event
+	 * @param \Icybee\Element\Document\BeforeRenderMetaEvent $event
 	 */
-	static public function before_document_render_metas(\Icybee\Document\BeforeRenderMetasEvent $event)
+	static public function before_document_render_meta(\Icybee\Element\Document\BeforeRenderMetaEvent $event)
 	{
 		$page = \ICanBoogie\app()->request->context->page;
 		$node = isset($page->node) ? $page->node : null;
@@ -120,7 +120,7 @@ EOT;
 			$description = trim(strip_tags($description));
 			$description = preg_replace('#\s+#', ' ', $description);
 
-			$event->metas['Description'] = $description;
+			$event->meta['Description'] = $description;
 		}
 
 		if ($page->is_home)
@@ -129,7 +129,7 @@ EOT;
 
 			if ($value)
 			{
-				$event->metas['google-site-verification'] = $value;
+				$event->meta['google-site-verification'] = $value;
 			}
 		}
 	}
@@ -137,9 +137,9 @@ EOT;
 	/**
 	 * Adds the canonical address of the document.
 	 *
-	 * @param \Icybee\Document\RenderMetasEvent $event
+	 * @param \Icybee\Element\Document\RenderMetaEvent $event
 	 */
-	static public function on_document_render_metas(\Icybee\Document\RenderMetasEvent $event)
+	static public function on_document_render_meta(\Icybee\Element\Document\RenderMetaEvent $event)
 	{
 		/* @var $node Node */
 

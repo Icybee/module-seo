@@ -14,7 +14,7 @@ return [
 	Icybee\Modules\Pages\PageRenderer::class . '::render' => $hooks . 'on_page_renderer_render',
 	Icybee\Modules\Sites\Block\EditBlock::class . '::alter_children' => $hooks . 'on_site_editblock_alter_children',
 	Brickrouge\Document::class . '::render_title:before' => $hooks . 'before_document_render_title',
-	Brickrouge\Document::class . '::render_metas:before' => $hooks . 'before_document_render_metas',
-	Brickrouge\Document::class . '::render_metas' => $hooks . 'on_document_render_metas'
+	Brickrouge\Document::class . '::render_meta:before' => $hooks . 'before_document_render_meta',
+	Brickrouge\Document::class . '::render_meta' => $hooks . 'on_document_render_meta'
 
 ];
