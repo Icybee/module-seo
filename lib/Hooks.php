@@ -11,18 +11,16 @@
 
 namespace Icybee\Modules\Seo;
 
-use ICanBoogie\Event;
+use function ICanBoogie\app;
 use ICanBoogie\Operation;
 
 use Brickrouge\Element;
 use Brickrouge\Group;
 use Brickrouge\Text;
 
-use Icybee\Modules\Nodes\Node;
-use Patron\Engine as Patron;
-
 use Icybee\Block\EditBlock\AlterChildrenEvent;
 use Icybee\Modules\Contents\Content;
+use Icybee\Modules\Nodes\Node;
 use Icybee\Modules\Pages\PageRenderer;
 
 // http://www.google.com/webmasters/docs/search-engine-optimization-starter-guide.pdf
@@ -44,7 +42,7 @@ class Hooks
 	{
 		$page = $event->page;
 
-		if (strpos($_SERVER['SERVER_NAME'], 'localhost') !== false || \ICanBoogie\app()->user_id == 1 || !$page->is_online || ($page->node && !$page->node->is_online))
+		if (strpos($_SERVER['SERVER_NAME'], 'localhost') !== false || app()->user_id == 1 || !$page->is_online || ($page->node && !$page->node->is_online))
 		{
 			return;
 		}
@@ -89,7 +87,7 @@ EOT;
 	 */
 	static public function before_document_render_title(\Icybee\Element\Document\BeforeRenderTitleEvent $event)
 	{
-		$page = \ICanBoogie\app()->request->context->page;
+		$page = app()->request->context->page;
 		$title = $page->document_title;
 		$site_title = $page->site->title;
 
@@ -103,7 +101,7 @@ EOT;
 	 */
 	static public function before_document_render_meta(\Icybee\Element\Document\BeforeRenderMetaEvent $event)
 	{
-		$page = \ICanBoogie\app()->request->context->page;
+		$page = app()->request->context->page;
 		$node = isset($page->node) ? $page->node : null;
 		$description = $page->description;
 
@@ -141,7 +139,7 @@ EOT;
 	{
 		/* @var $node Node */
 
-		$page = \ICanBoogie\app()->request->context->page;
+		$page = app()->request->context->page;
 		$node = isset($page->node) ? $page->node : null;
 
 		#
@@ -241,7 +239,7 @@ EOT;
 		$records = &$event->rc;
 		$keys = array_keys($records);
 
-		$metas = self::app()
+		$metas = app()
 			->models['registry/node']
 			->where([ 'targetid' => $keys, 'name' => [ 'document_title', 'description' ] ])
 			->all(\PDO::FETCH_NUM);
@@ -252,17 +250,5 @@ EOT;
 
 			$records[$page_id]->seo[$property] = $value;
 		}
-	}
-
-	/*
-	 * Support
-	 */
-
-	/**
-	 * @return \ICanBoogie\Core|\Icybee\Binding\CoreBindings
-	 */
-	static private function app()
-	{
-		return \ICanBoogie\app();
 	}
 }
